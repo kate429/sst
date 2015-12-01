@@ -1,0 +1,66 @@
+##### Kate Chamberlin
+##### Senior Research
+##### Survey Analysis Practice
+
+
+library(qcc)
+
+SSTsurvey = read.csv("/Users/katechamberlin/Documents/College/Senior/Fall 2015/Senior Research/SSTFINALRESPONSES.csv", 
+                     header = TRUE)
+
+#### ATM Usage Year vs COMFORT LEVEL #################################
+#V12 or L
+#Approximately how many times in the last 6 months did you withdraw cash 
+#from the ATM during regular bank hours when you could have gone to a teller at the bank?
+ATMusageyear = SSTsurvey$ATM_Usage_Year
+
+#V10 or J
+#If you have used an ATM to withdraw money, how comfortable are you with ATMs?
+ATMcomfort = SSTsurvey$ATM_Comfort
+ATMusagepercent = SSTsurvey$ATM_Usage_Percent
+ATMusageyear = SSTsurvey$ATM_Usage_Year
+
+ATM.comfort.by.yearly.usage = cbind(ATMusageyear, ATMcomfort)
+ATM.usage.percent.and.yearly.usage = cbind(ATMusageyear, ATMusagepercent)
+
+#### Barplot ATM YEARLY ####
+ATMUsageYearlytable = t(ATMusageyear)
+#pareto.chart(table(ATMUsageYearlytable),
+#       main = "ATM Yearly Usage",
+#      ylab = "Frequency",
+#     xlab = "ATM Visits in A Year",
+#   col = "blue")
+
+barplot(table(ATMUsageYearlytable),
+        main = "ATM Yearly Usage",
+        ylab = "Frequency",
+        xlab = "ATM Visits in A Year",
+        ylim = c(0,10),
+        col = "goldenrod1")
+
+#############################################################################
+
+#### Plot ATM YEARLY ####
+
+ATMusagepercent = SSTsurvey$ATM_Usage_Percent
+ATM.comfort.by.percent.usage = cbind(ATMusagepercent, ATMcomfort)
+
+plot(ATM.comfort.by.percent.usage,
+     main = "ATM VISITS vs COMFORT LEVEL",
+     ylab = "ATM Comfort Level",
+     xlab = "ATM Last 6 Months",
+     col = "blue")
+
+colors = c("firebrick", "gold", "mediumseagreen", "hotpink4", 
+           "orange", "blue", "pink2", "steelblue1") 
+
+pie(table(ATMusagepercent), 
+    main = "ATM Usage Percent",
+    col = colors)
+
+#### Demographic will be proportional (relative frequency). 
+#### Any of the data numbers will not be proportional.
+
+## for boxplot maybe we don't need cbind, or just look at usage year and usage percent
+
+
