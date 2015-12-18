@@ -1,0 +1,335 @@
+##### Kate Chamberlin
+##### Senior Research
+##### Survey Analysis
+
+library(qcc)
+
+SSTsurvey = read.csv("/Users/katechamberlin/Documents/College/Senior/Fall 2015/Senior Research/SSTFINALRESPONSES.csv", 
+         header = TRUE)
+
+# http://www.stat.columbia.edu/~tzheng/files/Rcolor.pdf 
+# colors in r ^
+
+
+#### PIE CHART FOR LOCATION #############################################
+type = SSTsurvey$Type # location, where we collected data from
+
+table(type) # frequency table
+typep = table(type) / length(type) #relative frequency (proportions) 
+
+colors8 = c("palegreen1", "mediumslateblue", 
+            "mediumseagreen", "goldenrod1", "orchid", "midnightblue", 
+            "mediumvioletred", "mediumturquoise") 
+
+pie(table(type), 
+    main = "Location Breakdown",
+    col = colors8)
+
+### Different SSTs USED #################################################################### 
+slices = c(14, 16, 26, 34, 40, 40, 42, 45, 45, 46)
+lbls = c("Time Sheets", "Mobile Bank", "EZ Pass", "Car Wash", "ATM", "Vending Machine", "Self-Checkout", "Online Shopping", "Package Tracking", "Search Engines")
+
+colors10 = c("tomato", "orange1", "palegreen1", "mediumslateblue", 
+             "mediumseagreen", "goldenrod1", "orchid", "midnightblue", 
+             "mediumvioletred", "mediumturquoise")
+
+colors9 = c("orange1", "palegreen1", "mediumslateblue", 
+            "mediumseagreen", "goldenrod1", "orchid", "midnightblue", 
+            "mediumvioletred", "mediumturquoise") 
+
+colors5 = c("goldenrod1", "orchid", "midnightblue", 
+            "mediumvioletred", "mediumturquoise")
+
+pie(slices, labels = lbls, 
+    main="SST Used", 
+    col=colors10)
+
+slices = c(7,5,13,9,13)
+lbls = c("20 to 29", "30 to 39", "40 to 49", "50 to 59", "60 to 69")
+pie(slices, labels = lbls, 
+    main="Age Distribution", 
+    col=colors5)
+
+#### PIE CHART - ATM Yearly Usage #############################################    
+ATMusageyear = SSTsurvey$ATM_Usage_Year
+table(ATMusageyear) # frequency table
+ATMUSAGEYEARp = table(ATMusageyear) / length(ATMusageyear) #relative frequency (proportions) 
+
+pie(table(ATMusageyear),
+    main = "ATM Usage per Year",
+    col = colors10)
+
+#### PIE CHART - ATM Percentage #############################################    
+ATMpercentage = SSTsurvey$ATM_Usage_Percent
+table(ATMpercentage) # frequency table
+ATMPERCENTAGEp = table(ATMpercentage) / length(ATMpercentage) #relative frequency (proportions) 
+
+pie(table(ATMpercentage),
+    main = "ATM Percentage vs Interpersonal Encounter",
+    col = colors5)
+
+#### PIE CHART - OS Yearly Usage #############################################    
+OSusageyear = SSTsurvey$OS_Usage_Year
+table(OSusageyear) # frequency table
+OSUSAGEYEARp = table(OSusageyear) / length(OSusageyear) #relative frequency (proportions) 
+
+pie(table(OSusageyear),
+    main = "OS Usage per Year",
+    col = colors10)
+
+#### PIE CHART - OS Percentage #############################################    
+OSpercentage = SSTsurvey$OS_Usage_Percent
+table(OSpercentage) # frequency table
+OSPERCENTAGEp = table(OSpercentage) / length(OSpercentage) #relative frequency (proportions) 
+
+pie(table(OSpercentage),
+    main = "OS Percentage vs Interpersonal Encounter",
+    col = colors5)
+
+#### PIE CHART - SC Yearly Usage #############################################    
+SCusageyear = SSTsurvey$SC_Usage_Year
+table(SCusageyear) # frequency table
+SCUSAGEYEARp = table(SCusageyear) / length(SCusageyear) #relative frequency (proportions) 
+
+pie(table(SCusageyear),
+    main = "SC Usage per Year",
+    col = colors10)
+
+#### PIE CHART - SC Percentage #############################################    
+SCpercentage = SSTsurvey$SC_Usage_Percent
+table(SCpercentage) # frequency table
+SCPERCENTAGEp = table(SCpercentage) / length(SCpercentage) #relative frequency (proportions) 
+
+pie(table(SCpercentage),
+    main = "SC Percentage vs Interpersonal Encounter",
+    col = colors5)
+
+###############################################################################
+###############################################################################
+
+######### ATM - Yearly Usage ##############################
+# get the range for the x and y axis 
+xrange = SSTsurvey$ATM_Comfort 
+yrange = SSTsurvey$ATM_Usage_Year
+
+# set up the plot 
+plot(xrange, yrange, type="p", 
+     main = "ATM Comfort Level by Number of Uses in a Year",
+     xlab="Comfort Level",
+     ylab="ATM Usage in A Year") 
+
+
+## This line takes the avg of each "column" and connects a line
+keep = !is.na(xrange) & !is.na(yrange) 
+fit = lowess(xrange[keep], yrange[keep])
+lines(fit, col = "red")
+
+
+## BOXPLOT
+s = split(yrange, xrange)
+s
+boxplot(s, col = 1:5,
+        main = "ATM Comfort Level by Number of Uses in a Year",
+        xlab="Comfort Level",
+        ylab="ATM Usage in A Year") 
+
+
+## t test compare boxplot
+t.test(s[[3]], s[[5]])
+
+
+## Analysis of Variance (ANOVA) for difference between groups
+fit = lm(yrange ~ factor(xrange))
+anova(fit)
+summary(fit)
+
+##############################################################
+######### ATM - Percentage ##############################
+# get the range for the x and y axis 
+xrange = SSTsurvey$ATM_Comfort 
+yrange = SSTsurvey$ATM_Usage_Percent
+
+# set up the plot 
+plot(xrange, yrange, type="p", 
+     main = "Comfort Level by ATM over Interpersonal Encounter Percentage",
+     xlab="Comfort Level",
+     ylab="ATM Percent Usage") 
+
+
+## This line takes the avg of each "column" and connects a line
+keep = !is.na(xrange) & !is.na(yrange) 
+fit = lowess(xrange[keep], yrange[keep])
+lines(fit, col = "red")
+
+
+## BOXPLOT
+s = split(yrange, xrange)
+s
+boxplot(s, col = 1:5,
+        main = "Comfort Level by ATM over Interpersonal Encounter Percentage",
+        xlab="Comfort Level",
+        ylab="ATM Percent Usage") 
+
+## t test compare boxplot
+t.test(s[[3]], s[[5]])
+
+
+## Analysis of Variance (ANOVA) for difference between groups
+fit = lm(yrange ~ factor(xrange))
+anova(fit)
+summary(fit)
+
+##############################################################
+
+######### ONLINE SHOPPING - Yearly Usage ##############################
+# get the range for the x and y axis 
+xrange = SSTsurvey$OS_Comfort 
+yrange = SSTsurvey$OS_Usage_Year
+
+# set up the plot 
+plot(xrange, yrange, type="p", 
+     main = "OS Comfort Level by Number of Uses in a Year",
+     xlab="Comfort Level",
+     ylab="OS Usage in A Year") 
+
+
+## This line takes the avg of each "column" and connects a line
+keep = !is.na(xrange) & !is.na(yrange) 
+fit = lowess(xrange[keep], yrange[keep])
+lines(fit, col = "red")
+
+
+## BOXPLOT
+s = split(yrange, xrange)
+s
+boxplot(s, col = 1:5,
+        main = "OS Comfort Level by Number of Uses in a Year",
+        xlab="Comfort Level",
+        ylab="OS Usage in A Year") 
+
+
+## t test compare boxplot
+t.test(s[[3]], s[[5]])
+
+
+## Analysis of Variance (ANOVA) for difference between groups
+fit = lm(yrange ~ factor(xrange))
+anova(fit)
+summary(fit)
+
+##############################################################
+######### ONLINE SHOPPING - Percentage ##############################
+# get the range for the x and y axis 
+xrange = SSTsurvey$OS_Comfort 
+yrange = SSTsurvey$OS_Usage_Percent
+
+# set up the plot 
+plot(xrange, yrange, type="p", 
+     main = "Comfort Level by OS over Interpersonal Encounter Percentage",
+     xlab="Comfort Level",
+     ylab="OS Percent Usage") 
+
+
+## This line takes the avg of each "column" and connects a line
+keep = !is.na(xrange) & !is.na(yrange) 
+fit = lowess(xrange[keep], yrange[keep])
+lines(fit, col = "red")
+
+
+## BOXPLOT
+s = split(yrange, xrange)
+s
+boxplot(s, col = 1:5,
+        main = "Comfort Level by OS over Interpersonal Encounter Percentage",
+        xlab="Comfort Level",
+        ylab="OS Percent Usage") 
+
+## t test compare boxplot
+t.test(s[[3]], s[[5]])
+
+
+## Analysis of Variance (ANOVA) for difference between groups
+fit = lm(yrange ~ factor(xrange))
+anova(fit)
+summary(fit)
+
+##############################################################
+
+######### SELF CHECKOUT - Yearly Usage ##############################
+# get the range for the x and y axis 
+xrange = SSTsurvey$SC_Comfort 
+yrange = SSTsurvey$SC_Usage_Year
+
+# set up the plot 
+plot(xrange, yrange, type="p", 
+     main = "SC Comfort Level by Number of Uses in a Year",
+     xlab="Comfort Level",
+     ylab="SC Usage in A Year") 
+
+
+## This line takes the avg of each "column" and connects a line
+keep = !is.na(xrange) & !is.na(yrange) 
+fit = lowess(xrange[keep], yrange[keep])
+lines(fit, col = "red")
+
+
+## BOXPLOT
+s = split(yrange, xrange)
+s
+boxplot(s, col = 1:5,
+        main = "SC Comfort Level by Number of Uses in a Year",
+        xlab="Comfort Level",
+        ylab="SC Usage in A Year") 
+
+
+## t test compare boxplot
+t.test(s[[3]], s[[5]])
+
+
+## Analysis of Variance (ANOVA) for difference between groups
+fit = lm(yrange ~ factor(xrange))
+anova(fit)
+summary(fit)
+
+##############################################################
+######### SELF CHECKOUT - Percentage ##############################
+# get the range for the x and y axis 
+xrange = SSTsurvey$SC_Comfort 
+yrange = SSTsurvey$SC_Usage_Percent
+
+# set up the plot 
+plot(xrange, yrange, type="p", 
+     main = "Comfort Level by SC over Interpersonal Encounter Percentage",
+     xlab="Comfort Level",
+     ylab="SC Percent Usage") 
+
+
+## This line takes the avg of each "column" and connects a line
+keep = !is.na(xrange) & !is.na(yrange) 
+fit = lowess(xrange[keep], yrange[keep])
+lines(fit, col = "red")
+
+
+## BOXPLOT
+s = split(yrange, xrange)
+s
+boxplot(s, col = 1:5,
+        main = "Comfort Level by SC over Interpersonal Encounter Percentage",
+        xlab="Comfort Level",
+        ylab="SC Percent Usage") 
+
+## t test compare boxplot
+t.test(s[[3]], s[[5]])
+
+
+## Analysis of Variance (ANOVA) for difference between groups
+fit = lm(yrange ~ factor(xrange))
+anova(fit)
+summary(fit)
+
+##############################################################
+
+
+
+
+
